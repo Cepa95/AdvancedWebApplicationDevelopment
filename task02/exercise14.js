@@ -15,3 +15,16 @@ function printValue(value) {
 // }
 
 // promise.then(printValue);
+
+
+// function createPromise() {
+//   return new Promise((resolve) => {
+//     setTimeout(() => resolve("Resolved"), 1000);
+//   }).then(printValue);
+// }
+
+// function printValue(value) {
+//   console.log(value);
+// }
+
+// createPromise();
