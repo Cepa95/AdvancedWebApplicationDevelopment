@@ -1,14 +1,23 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 import './App.css';
 import Filter from './Filter';
+import WrappedDetails from './Details';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Craft pive</h1>
-        <Filter />
-      </header>
+        <Router>
+          <Routes>
+          <Route path="/" element={<Filter />} />
+          <Route path="/details/:subtype" element={<WrappedDetails />} />
+          </Routes>
+        </Router>
+        
     </div>
   );
 }

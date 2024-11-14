@@ -5,7 +5,7 @@ const Filter = () => {
   const [types, setTypes] = useState([]); // stanje za vrste piva
   const [subtypes, setSubtypes] = useState([]); // stanje za podvrste piva
   const [selectedType, setSelectedType] = useState(""); // stanje za odabranu vrstu piva
-  const [selectedSubtype, setSelectedSubtype] = useState(""); // stanje za odabranu podvrstu piva
+  const [selectedSubtype, setSelectedSubtype] = useState({ id: "", name: "" }); // stanje za odabranu podvrstu piva
 
   useEffect(() => {
     fetch("http://demo4497994.mockable.io/vrstePiva")
@@ -41,13 +41,16 @@ const Filter = () => {
         </select>
 
         <select
-          value={selectedSubtype}
-          onChange={(e) => setSelectedSubtype(e.target.value)}
+          value={selectedSubtype.name}
+          onChange={(e) => {
+            const selected = subtypes.find(subtype => subtype.name === e.target.value);
+            setSelectedSubtype(selected);
+          }}
         >
           <option value="">Odaberite podvrstu pive</option>
           {subtypes.map((subtype) => (
-            <option key={subtype} value={subtype}>
-              {subtype}
+            <option key={subtype.id} value={subtype.name}>
+              {subtype.name}
             </option>
           ))}
         </select>
@@ -60,7 +63,7 @@ const Filter = () => {
       >
         Fetch Data
       </button>
-      <Results subtypes={subtypes} type={selectedType} />
+      <Results subtypes={subtypes} type={selectedType} selectedSubtype={selectedSubtype} />
     </div>
   );
 };
