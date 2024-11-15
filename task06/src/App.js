@@ -9,20 +9,22 @@ import Filter from './Filter';
 import WrappedDetails from './Details';
 import { CartProvider } from './CartContext';
 import Cart from './Cart';
+import Navigation from './Navigation';
 
 function App() {
   return (
     <div className="App">
-       <header className="App-header">
-      <CartProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Filter />} />
-            <Route path="/details/:subtype" element={<WrappedDetails />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-        </Router>
-      </CartProvider>
+      <header className="App-header">
+        <CartProvider>
+          <Router>
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<Filter />} />
+              <Route path="/details/:subtype" element={<WrappedDetails />} />
+              <Route path="/cart" element={<Cart />} />
+            </Routes>
+          </Router>
+        </CartProvider>
       </header>
     </div>
   );
