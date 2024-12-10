@@ -18,11 +18,18 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
         )}
         {isLoggedIn ? (
           <li>
-            <Link to="/" onClick={onLogout}>Logout</Link>
+            <Link to="/" onClick={onLogout}>
+              Logout
+            </Link>
           </li>
         ) : (
           <li>
             <Link to="/login">Login</Link>
+          </li>
+        )}
+        {isLoggedIn && (
+          <li>
+            <Link to="/change-password">Change Password</Link>
           </li>
         )}
       </ul>

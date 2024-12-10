@@ -5,6 +5,7 @@ const userRoutes = require("./routes/users");
 const plantRoutes = require("./routes/plants");
 const manufacturerRoutes = require("./routes/manufacturers");
 const authRoutes = require("./routes/auth");
+const settingsRoutes = require("./routes/settings");
 require("dotenv").config();
 
 const app = express();
@@ -36,6 +37,7 @@ apiRouter.use("/users", userRoutes);
 apiRouter.use("/plants", plantRoutes);
 apiRouter.use("/manufacturers", manufacturerRoutes);
 apiRouter.use("/auth", authRoutes);
+apiRouter.use("/settings", settingsRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
