@@ -1,13 +1,31 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Navigation = () => {
-  const navigate = useNavigate();
-
+const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
   return (
     <nav>
-      <button onClick={() => navigate("/")}>Home</button>
-      <button onClick={() => navigate("/cart")}>Cart</button>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/cart">Cart</Link>
+        </li>
+        {isAdmin && (
+          <li>
+            <Link to="/users">Users</Link>
+          </li>
+        )}
+        {isLoggedIn ? (
+          <li>
+            <Link to="/" onClick={onLogout}>Logout</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        )}
+      </ul>
     </nav>
   );
 };

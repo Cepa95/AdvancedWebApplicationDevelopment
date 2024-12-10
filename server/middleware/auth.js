@@ -17,10 +17,14 @@ const generateToken = (user) => {
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
     return res.status(403).send({ message: "No token provided." });
   }
+
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7, authHeader.length)
+    : authHeader;
 
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {
