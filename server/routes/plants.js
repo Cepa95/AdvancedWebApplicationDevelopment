@@ -52,4 +52,30 @@ router.get("/by-manufacturer", verifyToken, async (req, res) => {
   }
 });
 
+// Route to get all plants sorted alphabetically by manufacturer
+router.get("/sorted-by-manufacturer", async (req, res) => {
+  try {
+    const plants = await Plant.find()
+      .populate("manufacturer")
+      .sort({ "manufacturer.name": 1 });
+    res.status(200).send(plants);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Get plants by di
+// Route to get a plant by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const plant = await Plant.findById(req.params.id).populate("manufacturer");
+    if (!plant) {
+      return res.status(404).send({ message: "Plant not found" });
+    }
+    res.status(200).send(plant);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

@@ -1,11 +1,21 @@
+// eslint-disable-next-line
+import "bootswatch/dist/cerulean/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import "./App.css";
-import Navigation from "./Navigation";
+import Home from "./components/Home";
+import Navigation from "./components/Navigation";
 import Users from "./components/admin/Users";
 import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 import ChangePassword from "./components/auth/ChangePassword";
+import Products from "./components/products/Products";
+import ProductDetails from "./components/products/ProductDetails";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,26 +52,35 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-
-          <Router>
-            <Navigation isLoggedIn={isLoggedIn} isAdmin={isAdmin} onLogout={handleLogout} />
-            <Routes>
-              <Route path="/" element={<ChangePassword />} />
-              <Route
-                path="/login"
-                element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />}
-              />
-              <Route path="/users" element={isAdmin ? <Users /> : <Navigate to="/login" />} />
-              <Route
-                path="/change-password"
-                element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" />}
-              />
-            </Routes>
-          </Router>
-      </header>
-    </div>
+    <header className="App-header">
+      <Router>
+        <Navigation
+          isLoggedIn={isLoggedIn}
+          isAdmin={isAdmin}
+          onLogout={handleLogout}
+        />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />
+            }
+          />
+          <Route
+            path="/users"
+            element={isAdmin ? <Users /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/change-password"
+            element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" />}
+          />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+        </Routes>
+      </Router>
+    </header>
   );
 }
 

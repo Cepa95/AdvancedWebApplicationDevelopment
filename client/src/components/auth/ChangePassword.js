@@ -23,31 +23,43 @@ const ChangePassword = () => {
   };
 
   return (
-    <div>
-      <h1>Change Password</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Old Password:</label>
-          <input
-            type="password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            required
-          />
+    <div className="container mt-5">
+      <div className="card">
+        <div className="card-header">
+          <h1>Change Password</h1>
         </div>
-        <div>
-          <label>New Password:</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="oldPassword" className="form-label">Old Password:</label>
+              <input
+                type="password"
+                className="form-control"
+                id="oldPassword"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="newPassword" className="form-label">New Password:</label>
+              <input
+                type="password"
+                className="form-control"
+                id="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+            </div>
+            {message && <div className="alert alert-success">{message}</div>}
+            {error && <div className="alert alert-danger">{error}</div>}
+            <div className="text-center">
+              <button type="submit" className="btn btn-primary">Change Password</button>
+            </div>
+          </form>
         </div>
-        {message && <p style={{ color: 'green' }}>{message}</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Change Password</button>
-      </form>
+      </div>
     </div>
   );
 };

@@ -1,22 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../../api";
 
-
-const Login = ({ onLogin }) => {
+const Register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login", { email, password });
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      onLogin();
+      const response = await api.post("/auth/register", { name, email, password });
+      setMessage("Registration successful!");
+      setError("");
+  
+      navigate("/login");
     } catch (error) {
-      setError("Invalid email or password");
+      setError(error.response?.data?.message || "An error occurred");
+      setMessage("");
     }
   };
 
@@ -26,10 +30,21 @@ const Login = ({ onLogin }) => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h1>Login</h1>
+              <h1>Register</h1>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="name" className="form-label">Name:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">Email:</label>
                   <input
@@ -52,13 +67,11 @@ const Login = ({ onLogin }) => {
                     required
                   />
                 </div>
+                {message && <div className="alert alert-success">{message}</div>}
                 {error && <div className="alert alert-danger">{error}</div>}
-                <div className="text-center mb-2">
-                  <button type="submit" className="btn btn-primary">Login</button>
+                <div className="text-center">
+                  <button type="submit" className="btn btn-primary">Register</button>
                 </div>
-                <div className="card-footer text-center">
-              New User? <Link to="/register">Register</Link>
-            </div>
               </form>
             </div>
           </div>
@@ -68,4 +81,4 @@ const Login = ({ onLogin }) => {
   );
 };
 
-export default Login;
+export default Register;
