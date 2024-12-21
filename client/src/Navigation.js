@@ -8,9 +8,6 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
-          <Link to="/cart">Cart</Link>
-        </li>
         {isAdmin && (
           <li>
             <Link to="/users">Users</Link>
