@@ -22,6 +22,11 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
                 <Link className="nav-link" to="/users">Users</Link>
               </li>
             )}
+               {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/create-plant">Plants</Link>
+              </li>
+            )}
           </ul>
           <ul className="navbar-nav ms-auto">
             {isLoggedIn && (

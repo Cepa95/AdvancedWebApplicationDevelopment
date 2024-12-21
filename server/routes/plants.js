@@ -78,4 +78,34 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Route to update a plant by ID
+router.put("/:id", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const plant = await Plant.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!plant) {
+      return res.status(404).send({ message: "Plant not found" });
+    }
+    res.status(200).send(plant);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// Route to delete a plant by ID
+router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const plant = await Plant.findByIdAndDelete(req.params.id);
+    if (!plant) {
+      return res.status(404).send({ message: "Plant not found" });
+    }
+    res.status(200).send({ message: "Plant deleted successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
 module.exports = router;

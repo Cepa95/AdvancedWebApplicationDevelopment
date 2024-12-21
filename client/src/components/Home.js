@@ -7,7 +7,7 @@ const Home = () => {
         <h1 className="display-4">Welcome to Plant Store!</h1>
         <p className="lead">Your one-stop shop for all your plant needs.</p>
         <hr className="my-4" />
-        <p>Explore our wide variety of plants and gardening supplies.</p>
+        <p>Explore our wide variety of plants!</p>
       </div>
     </div>
   );
