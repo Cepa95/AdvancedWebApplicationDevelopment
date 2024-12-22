@@ -13,6 +13,9 @@ import Products from "./components/products/Products";
 import ProductDetails from "./components/products/ProductDetails";
 import UpdatePlant from "./components/admin/UpdatePlant";
 import CreatePlant from "./components/admin/CreatePlant";
+import CreateUser from "./components/admin/CreateUser";
+import UserInfo from "./components/admin/UserInfo"; 
+import NotFound from "./components/NotFound";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,11 +61,14 @@ function App() {
             <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/users" element={isAdmin ? <Users /> : <Navigate to="/login" />} />
-            <Route path="/change-password" element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" />} />
+            <Route path="/users/:id" element={isAdmin ? <UserInfo /> : <Navigate to="/login" />} />
+            <Route path="/change-password" element={isLoggedIn ? <ChangePassword onLogout={handleLogout} /> : <Navigate to="/login" />} />
             <Route path="/products" element={<Products isAdmin={isAdmin} />} />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/update-plant/:id" element={isAdmin ? <UpdatePlant /> : <Navigate to="/login" />} />
             <Route path="/create-plant" element={isAdmin ? <CreatePlant /> : <Navigate to="/login" />} />
+            <Route path="/create-user" element={isAdmin ? <CreateUser /> : <Navigate to="/login" />} /> 
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </header>

@@ -6,17 +6,26 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== repeatPassword) {
+      setError("Passwords do not match");
+      setMessage("");
+      return;
+    }
     try {
-      const response = await api.post("/auth/register", { name, email, password });
+      const response = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
       setMessage("Registration successful!");
       setError("");
-  
       navigate("/login");
     } catch (error) {
       setError(error.response?.data?.message || "An error occurred");
@@ -35,7 +44,9 @@ const Register = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Name:</label>
+                  <label htmlFor="name" className="form-label">
+                    Name:
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -46,7 +57,9 @@ const Register = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email:</label>
+                  <label htmlFor="email" className="form-label">
+                    Email:
+                  </label>
                   <input
                     type="email"
                     className="form-control"
@@ -57,7 +70,9 @@ const Register = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password:</label>
+                  <label htmlFor="password" className="form-label">
+                    Password:
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -67,10 +82,27 @@ const Register = () => {
                     required
                   />
                 </div>
-                {message && <div className="alert alert-success">{message}</div>}
+                <div className="mb-3">
+                  <label htmlFor="repeatPassword" className="form-label">
+                    Repeat Password:
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="repeatPassword"
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    required
+                  />
+                </div>
                 {error && <div className="alert alert-danger">{error}</div>}
+                {message && (
+                  <div className="alert alert-success">{message}</div>
+                )}
                 <div className="text-center">
-                  <button type="submit" className="btn btn-primary">Register</button>
+                  <button type="submit" className="btn btn-primary">
+                    Register
+                  </button>
                 </div>
               </form>
             </div>

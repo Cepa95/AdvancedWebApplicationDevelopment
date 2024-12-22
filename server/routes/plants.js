@@ -55,16 +55,14 @@ router.get("/by-manufacturer", verifyToken, async (req, res) => {
 // Route to get all plants sorted alphabetically by manufacturer
 router.get("/sorted-by-manufacturer", async (req, res) => {
   try {
-    const plants = await Plant.find()
-      .populate("manufacturer")
-      .sort({ "manufacturer.name": 1 });
+    const plants = await Plant.find().populate("manufacturer");
+    plants.sort((a, b) => a.manufacturer.name.localeCompare(b.manufacturer.name));
     res.status(200).send(plants);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// Get plants by di
 // Route to get a plant by ID
 router.get("/:id", async (req, res) => {
   try {
@@ -106,6 +104,5 @@ router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 
 module.exports = router;

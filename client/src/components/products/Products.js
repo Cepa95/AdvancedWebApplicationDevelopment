@@ -60,6 +60,9 @@ const Products = ({ isAdmin }) => {
                 )}
                 <div className="d-flex justify-content-between">
                   <Link to={`/products/${plant._id}`} className="btn btn-primary">View Details</Link>
+                  <Link to="/wishlist" className="btn btn-outline-danger">
+                    <i className="bi bi-heart"></i>
+                  </Link>
                   <Link to={`/products/${plant._id}`} className="btn btn-primary">Add To Basket</Link>
                 </div>
               </div>

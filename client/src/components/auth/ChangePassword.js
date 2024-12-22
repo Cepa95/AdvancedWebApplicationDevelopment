@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
-import api from '../../api';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
-const ChangePassword = () => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+const ChangePassword = ({ onLogout }) => {
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [repeatNewPassword, setRepeatNewPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (newPassword !== repeatNewPassword) {
+      setError("New passwords do not match");
+      setMessage("");
+      return;
+    }
     try {
-      const response = await api.put('/settings/change-password', {
+      const response = await api.put("/settings/change-password", {
         oldPassword,
         newPassword,
       });
       setMessage(response.data.message);
-      setError('');
+      setError("");
+      onLogout();
     } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred');
-      setMessage('');
+      setError(error.response?.data?.message || "An error occurred");
+      setMessage("");
     }
   };
 
@@ -31,7 +40,9 @@ const ChangePassword = () => {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="oldPassword" className="form-label">Old Password:</label>
+              <label htmlFor="oldPassword" className="form-label">
+                Old Password:
+              </label>
               <input
                 type="password"
                 className="form-control"
@@ -42,7 +53,9 @@ const ChangePassword = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="newPassword" className="form-label">New Password:</label>
+              <label htmlFor="newPassword" className="form-label">
+                New Password:
+              </label>
               <input
                 type="password"
                 className="form-control"
@@ -52,10 +65,25 @@ const ChangePassword = () => {
                 required
               />
             </div>
+            <div className="mb-3">
+              <label htmlFor="repeatNewPassword" className="form-label">
+                Repeat New Password:
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="repeatNewPassword"
+                value={repeatNewPassword}
+                onChange={(e) => setRepeatNewPassword(e.target.value)}
+                required
+              />
+            </div>
             {message && <div className="alert alert-success">{message}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="text-center">
-              <button type="submit" className="btn btn-primary">Change Password</button>
+              <button type="submit" className="btn btn-primary">
+                Change Password
+              </button>
             </div>
           </form>
         </div>
