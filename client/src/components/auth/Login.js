@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api";
 
-
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +30,9 @@ const Login = ({ onLogin }) => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email:</label>
+                  <label htmlFor="email" className="form-label">
+                    Email:
+                  </label>
                   <input
                     type="email"
                     className="form-control"
@@ -42,7 +43,9 @@ const Login = ({ onLogin }) => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password:</label>
+                  <label htmlFor="password" className="form-label">
+                    Password:
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -54,11 +57,16 @@ const Login = ({ onLogin }) => {
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <div className="text-center mb-2">
-                  <button type="submit" className="btn btn-primary">Login</button>
+                  <button type="submit" className="btn btn-primary">
+                    Login
+                  </button>
                 </div>
                 <div className="card-footer text-center">
-              New User? <Link to="/register">Register</Link>
-            </div>
+                  New User?{" "}
+                  <Link to="/register" style={{ textDecoration: "none" }}>
+                      Register
+                  </Link>
+                </div>
               </form>
             </div>
           </div>

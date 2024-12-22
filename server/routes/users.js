@@ -44,4 +44,47 @@ router.get("/:id", verifyToken, isAdmin, async (req, res) => {
   }
 });
 
+// Route to update a user by ID, excluding the password
+router.put("/:id", verifyToken, isAdmin, async (req, res) => {
+  const allowedUpdates = ["name", "email", "isAdmin"];
+  const updates = Object.keys(req.body);
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// Route to delete a user by ID
+router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    res.status(200).send({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

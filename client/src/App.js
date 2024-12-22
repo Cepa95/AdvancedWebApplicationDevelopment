@@ -16,6 +16,8 @@ import CreatePlant from "./components/admin/CreatePlant";
 import CreateUser from "./components/admin/CreateUser";
 import UserInfo from "./components/admin/UserInfo"; 
 import NotFound from "./components/NotFound";
+import UpdateUser from "./components/admin/UpdateUser";
+import ChangeUserPassword from "./components/admin/ChangeUserPassword";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,6 +70,8 @@ function App() {
             <Route path="/update-plant/:id" element={isAdmin ? <UpdatePlant /> : <Navigate to="/login" />} />
             <Route path="/create-plant" element={isAdmin ? <CreatePlant /> : <Navigate to="/login" />} />
             <Route path="/create-user" element={isAdmin ? <CreateUser /> : <Navigate to="/login" />} /> 
+            <Route path="/change-user-password/:id" element={isAdmin ? <ChangeUserPassword /> : <Navigate to="/login" />} /> 
+            <Route path="/update-user/:id" element={isAdmin ? <UpdateUser /> : <Navigate to="/login" />} /> 
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
