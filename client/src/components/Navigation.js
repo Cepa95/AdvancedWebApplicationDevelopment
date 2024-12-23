@@ -31,6 +31,11 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
                 Products
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/manufacturers">
+                Manufacturers
+              </Link>
+            </li>
             {isAdmin && (
               <li className="nav-item">
                 <Link className="nav-link" to="/users">

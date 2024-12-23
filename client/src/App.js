@@ -18,6 +18,10 @@ import UserInfo from "./components/admin/UserInfo";
 import NotFound from "./components/NotFound";
 import UpdateUser from "./components/admin/UpdateUser";
 import ChangeUserPassword from "./components/admin/ChangeUserPassword";
+import Manufacturers from "./components/manufacturers/Manufacturers";
+import ManufacturerDetails from "./components/manufacturers/ManufacturerDetails";
+import UpdateManufacturer from "./components/admin/UpdateManufacturer";
+import CreateManufacturer from "./components/admin/CreateManufacturer"; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -72,6 +76,10 @@ function App() {
             <Route path="/create-user" element={isAdmin ? <CreateUser /> : <Navigate to="/login" />} /> 
             <Route path="/change-user-password/:id" element={isAdmin ? <ChangeUserPassword /> : <Navigate to="/login" />} /> 
             <Route path="/update-user/:id" element={isAdmin ? <UpdateUser /> : <Navigate to="/login" />} /> 
+            <Route path="/manufacturers" element={<Manufacturers isAdmin={isAdmin} />} />
+            <Route path="/manufacturers/:id" element={<ManufacturerDetails />} />
+            <Route path="/update-manufacturer/:id" element={isAdmin ? <UpdateManufacturer /> : <Navigate to="/login" />} /> 
+            <Route path="/create-manufacturer" element={isAdmin ? <CreateManufacturer /> : <Navigate to="/login" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
