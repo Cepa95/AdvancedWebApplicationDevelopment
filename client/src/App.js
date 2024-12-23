@@ -22,11 +22,13 @@ import Manufacturers from "./components/manufacturers/Manufacturers";
 import ManufacturerDetails from "./components/manufacturers/ManufacturerDetails";
 import UpdateManufacturer from "./components/admin/UpdateManufacturer";
 import CreateManufacturer from "./components/admin/CreateManufacturer"; 
+import Cart from "./components/cart/Cart"; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -69,7 +71,7 @@ function App() {
             <Route path="/users" element={isAdmin ? <Users /> : <Navigate to="/login" />} />
             <Route path="/users/:id" element={isAdmin ? <UserInfo /> : <Navigate to="/login" />} />
             <Route path="/change-password" element={isLoggedIn ? <ChangePassword onLogout={handleLogout} /> : <Navigate to="/login" />} />
-            <Route path="/products" element={<Products isAdmin={isAdmin} />} />
+            <Route path="/products" element={<Products isAdmin={isAdmin} isLoggedIn={isLoggedIn} />} />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/update-plant/:id" element={isAdmin ? <UpdatePlant /> : <Navigate to="/login" />} />
             <Route path="/create-plant" element={isAdmin ? <CreatePlant /> : <Navigate to="/login" />} />
@@ -80,6 +82,7 @@ function App() {
             <Route path="/manufacturers/:id" element={<ManufacturerDetails />} />
             <Route path="/update-manufacturer/:id" element={isAdmin ? <UpdateManufacturer /> : <Navigate to="/login" />} /> 
             <Route path="/create-manufacturer" element={isAdmin ? <CreateManufacturer /> : <Navigate to="/login" />} />
+            <Route path="/cart" element={isLoggedIn ? <Cart /> : <Navigate to="/login" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

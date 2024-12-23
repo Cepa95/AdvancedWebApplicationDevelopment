@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api";
 
-const Products = ({ isAdmin }) => {
+const Products = ({ isAdmin, isLoggedIn }) => {
   const [plants, setPlants] = useState([]);
+  const [error, setError] = useState("");
   const [plantToDelete, setPlantToDelete] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -12,7 +15,7 @@ const Products = ({ isAdmin }) => {
         const response = await api.get("/plants/sorted-by-manufacturer");
         setPlants(response.data);
       } catch (error) {
-        console.error("Error fetching plants:", error);
+        setError("Error fetching plants");
       }
     };
 
@@ -25,20 +28,39 @@ const Products = ({ isAdmin }) => {
       setPlants(plants.filter((plant) => plant._id !== plantToDelete));
       setPlantToDelete(null);
     } catch (error) {
-      console.error("Error deleting plant:", error);
+      const errorMessage = error.response?.data?.message || "Error deleting plant";
+      setError(errorMessage);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await api.post(
+        "/cart/add-to-cart",
+        { plantId: selectedPlant },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setShowPopup(false);
+    } catch (error) {
+      setError("Error adding product to cart");
     }
   };
 
   return (
     <div className="container mt-5">
+      <br></br>
+      {error && <div className="alert alert-danger">{error}</div>}
       <div className="row">
         {plants.map((plant) => (
-          <div className="col-md-4 mb-4" key={plant._id}>
+          <div key={plant._id} className="col-md-4 mb-4 mt-1">
             <div className="card">
               <div className="card-header d-flex justify-content-between">
                 {isAdmin && (
                   <>
-                    <Link to={`/update-plant/${plant._id}`} className="btn btn-secondary btn-sm">Update</Link>
+                    <Link to={`/update-plant/${plant._id}`} className="btn btn-secondary btn-sm me-2">
+                      Update
+                    </Link>
                     <button
                       onClick={() => setPlantToDelete(plant._id)}
                       className="btn btn-danger btn-sm"
@@ -63,7 +85,19 @@ const Products = ({ isAdmin }) => {
                   <Link to="/wishlist" className="btn btn-outline-danger">
                     <i className="bi bi-heart"></i>
                   </Link>
-                  <Link to={`/products/${plant._id}`} className="btn btn-primary">Add To Basket</Link>
+                  { (isLoggedIn &&
+                    <button
+                      onClick={() => {
+                        setSelectedPlant(plant._id);
+                        setShowPopup(true);
+                      }}
+                      className="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addToCartModal"
+                    >
+                      Add To Cart
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -84,13 +118,30 @@ const Products = ({ isAdmin }) => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                data-bs-dismiss="modal"
-                onClick={handleDelete}
-              >
+              <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDelete}>
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Add to Cart Modal */}
+      <div className="modal fade" id="addToCartModal" tabIndex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="addToCartModalLabel">Add to Cart</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              Do you want to add this product to the cart?
+              {error && <div className="alert alert-danger mt-2">{error}</div>}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={handleAddToCart}>
+                Yes
               </button>
             </div>
           </div>

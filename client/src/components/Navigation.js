@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           ePlant
@@ -51,17 +51,20 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
               </li>
             )}
           </ul>
-          <ul className="navbar-nav ms-auto">
+           <ul className="navbar-nav ms-auto">
+            {isLoggedIn &&
             <li className="nav-item">
               <Link className="nav-link" to="/wishlist">
                 <i className="bi bi-heart"></i>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/basket">
+            }
+           {isLoggedIn && <li className="nav-item">
+              <Link className="nav-link" to="/cart">
                 <i className="bi bi-cart"></i>
               </Link>
             </li>
+            }
             {isLoggedIn && (
               <li className="nav-item">
                 <Link className="nav-link" to="/change-password">

@@ -50,6 +50,7 @@ const Users = () => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <h1>Users</h1>
       <Link to={`/create-user`} className="btn btn-info btn-sm mx-3">
         Add New User

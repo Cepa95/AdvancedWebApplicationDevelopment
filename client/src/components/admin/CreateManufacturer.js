@@ -32,6 +32,7 @@ const CreateManufacturer = () => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <div className="card">
         <div className="card-header">
           <h1>Create Manufacturer</h1>

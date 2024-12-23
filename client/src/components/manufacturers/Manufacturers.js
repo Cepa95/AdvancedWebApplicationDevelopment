@@ -38,6 +38,7 @@ const Manufacturers = ({ isAdmin }) => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <h1>Manufacturers</h1>
       {isAdmin && (
         <Link to={`/create-manufacturer`} className="btn btn-info btn-sm mx-3">

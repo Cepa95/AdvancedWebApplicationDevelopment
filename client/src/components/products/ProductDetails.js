@@ -25,6 +25,7 @@ const ProductDetails = () => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <div className="row">
         <div className="col-md-6">
           <img src={plant.image} className="img-fluid" alt={plant.name} />

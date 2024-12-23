@@ -30,6 +30,7 @@ const UserInfo = () => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <h1>User Information</h1>
       <div className="card">
         <div className="card-body">

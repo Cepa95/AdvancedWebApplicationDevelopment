@@ -6,6 +6,7 @@ const plantRoutes = require("./routes/plants");
 const manufacturerRoutes = require("./routes/manufacturers");
 const authRoutes = require("./routes/auth");
 const settingsRoutes = require("./routes/settings");
+const cartRoutes = require("./routes/cart");
 require("dotenv").config();
 
 const app = express();
@@ -38,6 +39,7 @@ apiRouter.use("/plants", plantRoutes);
 apiRouter.use("/manufacturers", manufacturerRoutes);
 apiRouter.use("/auth", authRoutes);
 apiRouter.use("/settings", settingsRoutes);
+apiRouter.use("/cart", cartRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

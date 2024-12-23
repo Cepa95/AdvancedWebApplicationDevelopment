@@ -34,7 +34,9 @@ const ChangeUserPassword = () => {
   };
 
   return (
+    
     <div className="container mt-5">
+      <br></br>
       <div className="card">
         <div className="card-header">
           <h1>Change User Password</h1>

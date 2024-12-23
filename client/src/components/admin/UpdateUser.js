@@ -45,6 +45,7 @@ const UpdateUser = () => {
 
   return (
     <div className="container mt-5">
+      <br></br>
       <div className="card">
         <div className="card-header">
           <h1>Update User</h1>

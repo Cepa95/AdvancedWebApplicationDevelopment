@@ -47,6 +47,7 @@ const UpdateManufacturer = () => {
   return (
     <div className="container mt-5">
       <div className="card">
+      <br></br>
         <div className="card-header">
           <h1>Update Manufacturer</h1>
         </div>
