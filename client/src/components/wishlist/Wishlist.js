@@ -37,48 +37,52 @@ const Wishlist = () => {
       <br></br>
       <h1>Wishlist</h1>
       {error && <div className="alert alert-danger">{error}</div>}
-      <div className="row">
-        {wishlist.map((item) => (
-          <div key={item.plantId._id} className="col-md-4 mb-4">
-            <div className="card">
-              <img
-                src={item.plantId.image}
-                className="card-img-top"
-                alt={item.plantId.name}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{item.plantId.name}</h5>
-                <p className="card-text">{item.plantId.description}</p>
-                <p className="card-text">
-                  <strong>Price:</strong> ${item.plantId.price}
-                </p>
-                {item.plantId.manufacturer && (
+      {wishlist.length === 0 ? (
+        <p>Your wishlist is empty.</p>
+      ) : (
+        <div className="row">
+          {wishlist.map((item) => (
+            <div key={item.plantId._id} className="col-md-4 mb-4">
+              <div className="card">
+                <img
+                  src={item.plantId.image}
+                  className="card-img-top"
+                  alt={item.plantId.name}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{item.plantId.name}</h5>
+                  <p className="card-text">{item.plantId.description}</p>
                   <p className="card-text">
-                    <strong>Manufacturer:</strong>{" "}
-                    {item.plantId.manufacturer.name}
+                    <strong>Price:</strong> ${item.plantId.price}
                   </p>
-                )}
-                <div className="d-flex justify-content-between">
-                  <Link
-                    to={`/products/${item.plantId._id}`}
-                    className="btn btn-primary"
-                  >
-                    View Details
-                  </Link>
-                  <button
-                    onClick={() => setPlantToRemove(item.plantId._id)}
-                    className="btn btn-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#removeFromWishlistModal"
-                  >
-                    Remove from Wishlist
-                  </button>
+                  {item.plantId.manufacturer && (
+                    <p className="card-text">
+                      <strong>Manufacturer:</strong>{" "}
+                      {item.plantId.manufacturer.name}
+                    </p>
+                  )}
+                  <div className="d-flex justify-content-between">
+                    <Link
+                      to={`/products/${item.plantId._id}`}
+                      className="btn btn-primary"
+                    >
+                      View Details
+                    </Link>
+                    <button
+                      onClick={() => setPlantToRemove(item.plantId._id)}
+                      className="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#removeFromWishlistModal"
+                    >
+                      Remove from Wishlist
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Remove from Wishlist Modal */}
       <div
