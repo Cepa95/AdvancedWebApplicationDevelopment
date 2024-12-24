@@ -12,7 +12,7 @@ const Cart = () => {
         const response = await api.get("/cart");
         setCartItems(response.data);
       } catch (error) {
-        setError("Error fetching cart items. Are u registered?");
+        setError("Error fetching cart items");
       }
     };
 
@@ -22,14 +22,28 @@ const Cart = () => {
   const handleRemoveFromCart = async () => {
     try {
       await api.delete(`/cart/remove-from-cart/${itemToRemove}`);
-      setCartItems(cartItems.filter((item) => item.plantId._id !== itemToRemove));
+      setCartItems(
+        cartItems.filter((item) => item.plantId._id !== itemToRemove)
+      );
       setItemToRemove(null);
     } catch (error) {
       setError("Error removing item from cart");
     }
   };
 
-  const totalPrice = cartItems.reduce((total, item) => total + item.plantId.price * item.quantity, 0);
+  const handleClearCart = async () => {
+    try {
+      await api.delete("/cart/clear-cart");
+      setCartItems([]);
+    } catch (error) {
+      setError("Error clearing cart");
+    }
+  };
+
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.plantId.price * item.quantity,
+    0
+  );
 
   return (
     <div className="container mt-5">
@@ -72,24 +86,54 @@ const Cart = () => {
             </tbody>
           </table>
           <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
+          <button
+            className="btn btn-danger"
+            onClick={handleClearCart}
+          >
+            Checkout
+          </button>
         </>
       )}
 
       {/* Remove Item Modal */}
-      <div className="modal fade" id="removeItemModal" tabIndex="-1" aria-labelledby="removeItemModalLabel" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="removeItemModal"
+        tabIndex="-1"
+        aria-labelledby="removeItemModalLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="removeItemModalLabel">Remove Item</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 className="modal-title" id="removeItemModalLabel">
+                Remove Item
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               Are you sure you want to remove this item from your cart?
               {error && <div className="alert alert-danger mt-2">{error}</div>}
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRemoveFromCart}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-dismiss="modal"
+                onClick={handleRemoveFromCart}
+              >
                 Remove
               </button>
             </div>

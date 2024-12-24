@@ -6,8 +6,9 @@ const Products = ({ isAdmin, isLoggedIn }) => {
   const [plants, setPlants] = useState([]);
   const [error, setError] = useState("");
   const [plantToDelete, setPlantToDelete] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
+  const [wishlistMessage, setWishlistMessage] = useState("");
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -19,7 +20,17 @@ const Products = ({ isAdmin, isLoggedIn }) => {
       }
     };
 
+    const fetchWishlist = async () => {
+      try {
+        const response = await api.get("/wishlist");
+        setWishlist(response.data);
+      } catch (error) {
+        setError("Error fetching wishlist");
+      }
+    };
+
     fetchPlants();
+    fetchWishlist();
   }, []);
 
   const handleDelete = async () => {
@@ -35,25 +46,39 @@ const Products = ({ isAdmin, isLoggedIn }) => {
 
   const handleAddToCart = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await api.post(
-        "/cart/add-to-cart",
-        { plantId: selectedPlant },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setShowPopup(false);
+      await api.post("/cart/add-to-cart", { plantId: selectedPlant });
     } catch (error) {
       setError("Error adding product to cart");
     }
   };
 
+  const handleAddToWishlist = async () => {
+    
+    try {
+      setWishlistMessage("")
+      await api.post("/wishlist", { plantId: selectedPlant });
+      setWishlist([...wishlist, { plantId: selectedPlant }]);
+    
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setWishlistMessage("Product already in wishlist");
+      } else {
+        setError("Error adding product to wishlist");
+      }
+    }
+  };
+
+  const isInWishlist = (plantId) => {
+    return wishlist.some((item) => item.plantId === plantId);
+  };
+
   return (
     <div className="container mt-5">
       <br></br>
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="alert alert-danger fixed-error-message">{error}</div>}
       <div className="row">
         {plants.map((plant) => (
-          <div key={plant._id} className="col-md-4 mb-4 mt-1">
+          <div key={plant._id} className="col-md-4 mb-4">
             <div className="card">
               <div className="card-header d-flex justify-content-between">
                 {isAdmin && (
@@ -82,14 +107,35 @@ const Products = ({ isAdmin, isLoggedIn }) => {
                 )}
                 <div className="d-flex justify-content-between">
                   <Link to={`/products/${plant._id}`} className="btn btn-primary">View Details</Link>
-                  <Link to="/wishlist" className="btn btn-outline-danger">
-                    <i className="bi bi-heart"></i>
-                  </Link>
-                  { (isLoggedIn &&
+                  {isLoggedIn && (
+                    isInWishlist(plant._id) ? (
+                      <button
+                        className="btn btn-outline-danger"
+                        disabled
+                      >
+                        <i className="bi bi-heart-fill"></i>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setWishlistMessage("")
+                          setSelectedPlant(plant._id);
+                          
+                   
+                        }}
+                        className="btn btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addToWishlistModal"
+                      >
+                        <i className="bi bi-heart"></i> 
+                      </button>
+                    )
+                  )}
+                  {isLoggedIn && (
                     <button
                       onClick={() => {
                         setSelectedPlant(plant._id);
-                        setShowPopup(true);
+                  
                       }}
                       className="btn btn-primary"
                       data-bs-toggle="modal"
@@ -99,13 +145,16 @@ const Products = ({ isAdmin, isLoggedIn }) => {
                     </button>
                   )}
                 </div>
+                {wishlistMessage && plant._id === selectedPlant && (
+                  <div className="alert alert-info mt-3">{wishlistMessage}</div>
+                )}
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modal */}
+      {/* Delete Modal */}
       <div className="modal fade" id="deleteModal" tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
@@ -141,6 +190,27 @@ const Products = ({ isAdmin, isLoggedIn }) => {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={handleAddToCart}>
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Add to Wishlist Modal */}
+      <div className="modal fade" id="addToWishlistModal" tabIndex="-1" aria-labelledby="addToWishlistModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="addToWishlistModalLabel">Add to Wishlist</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              Do you want to add this product to your wishlist?
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={handleAddToWishlist}>
                 Yes
               </button>
             </div>

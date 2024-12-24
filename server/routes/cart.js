@@ -69,4 +69,22 @@ router.delete("/remove-from-cart/:plantId", verifyToken, async (req, res) => {
   }
 });
 
+// Route to remove all items from the cart
+router.delete("/clear-cart", verifyToken, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    user.cart = [];
+    await user.save();
+    res.status(200).send(user.cart);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

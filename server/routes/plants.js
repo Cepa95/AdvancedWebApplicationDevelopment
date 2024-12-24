@@ -1,5 +1,6 @@
 const express = require("express");
 const Plant = require("../models/plant");
+const User = require("../models/user");
 const Manufacturer = require("../models/manufacturer");
 const { verifyToken, isAdmin } = require("../middleware/auth");
 const router = express.Router();
@@ -56,7 +57,9 @@ router.get("/by-manufacturer", verifyToken, async (req, res) => {
 router.get("/sorted-by-manufacturer", async (req, res) => {
   try {
     const plants = await Plant.find().populate("manufacturer");
-    plants.sort((a, b) => a.manufacturer.name.localeCompare(b.manufacturer.name));
+    plants.sort((a, b) =>
+      a.manufacturer.name.localeCompare(b.manufacturer.name)
+    );
     res.status(200).send(plants);
   } catch (error) {
     res.status(500).send(error);
@@ -104,5 +107,6 @@ router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
     res.status(500).send(error);
   }
 });
+
 
 module.exports = router;
