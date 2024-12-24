@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth");
 const settingsRoutes = require("./routes/settings");
 const cartRoutes = require("./routes/cart");
 const wishlistRoutes = require("./routes/wishlist")
+const searchRoutes = require("./routes/search")
 require("dotenv").config();
 
 const app = express();
@@ -41,7 +42,8 @@ apiRouter.use("/manufacturers", manufacturerRoutes);
 apiRouter.use("/auth", authRoutes);
 apiRouter.use("/settings", settingsRoutes);
 apiRouter.use("/cart", cartRoutes);
-apiRouter.use("/wishlist", wishlistRoutes)
+apiRouter.use("/wishlist", wishlistRoutes);
+apiRouter.use("/search", searchRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

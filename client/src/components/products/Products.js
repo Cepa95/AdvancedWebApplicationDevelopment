@@ -9,6 +9,7 @@ const Products = ({ isAdmin, isLoggedIn }) => {
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const [wishlistMessage, setWishlistMessage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -34,6 +35,15 @@ const Products = ({ isAdmin, isLoggedIn }) => {
     fetchPlants();
     fetchWishlist();
   }, [isLoggedIn]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await api.get(`/search?name=${searchTerm}`);
+      setPlants(response.data);
+    } catch (error) {
+      setError("Error searching plants");
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -79,6 +89,26 @@ const Products = ({ isAdmin, isLoggedIn }) => {
       {error && (
         <div className="alert alert-danger fixed-error-message">{error}</div>
       )}
+      <div className="mb-4">
+        <div className="d-flex">
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Search for products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+          <button className="btn btn-primary" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
+      </div>
+
       <div className="row">
         {plants.map((plant) => (
           <ProductCard
