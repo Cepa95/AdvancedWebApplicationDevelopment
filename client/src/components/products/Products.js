@@ -10,6 +10,7 @@ const Products = ({ isAdmin, isLoggedIn }) => {
   const [wishlist, setWishlist] = useState([]);
   const [wishlistMessage, setWishlistMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("manufacturer-desc");
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -35,15 +36,6 @@ const Products = ({ isAdmin, isLoggedIn }) => {
     fetchPlants();
     fetchWishlist();
   }, [isLoggedIn]);
-
-  const handleSearch = async () => {
-    try {
-      const response = await api.get(`/search?name=${searchTerm}`);
-      setPlants(response.data);
-    } catch (error) {
-      setError("Error searching plants");
-    }
-  };
 
   const handleDelete = async () => {
     try {
@@ -83,6 +75,18 @@ const Products = ({ isAdmin, isLoggedIn }) => {
     return wishlist.some((item) => item.plantId === plantId);
   };
 
+  const handleSearch = async () => {
+    try {
+      const [field, order] = sortOption.split("-");
+      const response = await api.get(
+        `/search?name=${searchTerm}&sortField=${field}&sortOrder=${order}`
+      );
+      setPlants(response.data);
+    } catch (error) {
+      setError("Error searching plants");
+    }
+  };
+
   return (
     <div className="container mt-5">
       <br></br>
@@ -103,7 +107,19 @@ const Products = ({ isAdmin, isLoggedIn }) => {
               }
             }}
           />
-          <button className="btn btn-primary" onClick={handleSearch}>
+          <select
+            className="form-select me-2"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="name-asc">Name Ascending</option>
+            <option value="name-desc">Name Descending</option>
+            <option value="price-asc">Price Ascending</option>
+            <option value="price-desc">Price Descending</option>
+            <option value="manufacturer-asc">Manufacturer Ascending</option>
+            <option value="manufacturer-desc">Manufacturer Descending</option>
+          </select>
+          <button className="btn btn-primary me-2" onClick={handleSearch}>
             Search
           </button>
         </div>
