@@ -14,61 +14,61 @@ const users = [
   {
     name: "John Doe",
     email: "john.doe@example.com",
-    password: "johndoe",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Jane Smith",
     email: "jane.smith@example.com",
-    password: "janesmith",
+    password: "123",
     isAdmin: true,
   },
   {
     name: "Alice Johnson",
     email: "alice.johnson@example.com",
-    password: "alicejohnson",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Bob Brown",
     email: "bob.brown@example.com",
-    password: "bobbrown",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Charlie Davis",
     email: "charlie.davis@example.com",
-    password: "charliedavis",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Diana Evans",
     email: "diana.evans@example.com",
-    password: "dianaevans",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Ethan Foster",
     email: "ethan.foster@example.com",
-    password: "ethanfoster",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Fiona Green",
     email: "fiona.green@example.com",
-    password: "fionagreen",
+    password: "123",
     isAdmin: true,
   },
   {
     name: "George Harris",
     email: "george.harris@example.com",
-    password: "georgeharris",
+    password: "123",
     isAdmin: false,
   },
   {
     name: "Hannah White",
     email: "hannah.white@example.com",
-    password: "hannahwhite",
+    password: "123",
     isAdmin: false,
   },
 ];
@@ -76,7 +76,10 @@ const users = [
 const seedUsers = async () => {
   try {
     await User.deleteMany();
-    await User.insertMany(users);
+    for (const user of users) {
+      const newUser = new User(user);
+      await newUser.save();
+    }
     console.log("Users seeded successfully");
   } catch (error) {
     console.error("Error seeding users:", error);

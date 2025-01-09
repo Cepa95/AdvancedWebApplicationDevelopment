@@ -11,7 +11,7 @@ const UpdatePlant = () => {
     image: "",
     description: "",
     price: "",
-    manufacturer: ""
+    manufacturer: "",
   });
   const [manufacturers, setManufacturers] = useState([]);
   const [error, setError] = useState("");
@@ -23,7 +23,7 @@ const UpdatePlant = () => {
         const plantData = response.data;
         setPlant({
           ...plantData,
-          manufacturer: plantData.manufacturer._id 
+          manufacturer: plantData.manufacturer._id,
         });
       } catch (error) {
         console.error("Error fetching plant details:", error);
@@ -47,7 +47,7 @@ const UpdatePlant = () => {
     const { name, value } = e.target;
     setPlant((prevPlant) => ({
       ...prevPlant,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -73,7 +73,9 @@ const UpdatePlant = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Name:</label>
+                  <label htmlFor="name" className="form-label">
+                    Name:
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -85,7 +87,9 @@ const UpdatePlant = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="type" className="form-label">Type:</label>
+                  <label htmlFor="type" className="form-label">
+                    Type:
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -97,7 +101,9 @@ const UpdatePlant = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="image" className="form-label">Image URL:</label>
+                  <label htmlFor="image" className="form-label">
+                    Image URL:
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -109,7 +115,9 @@ const UpdatePlant = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="description" className="form-label">Description:</label>
+                  <label htmlFor="description" className="form-label">
+                    Description:
+                  </label>
                   <textarea
                     className="form-control"
                     id="description"
@@ -120,7 +128,9 @@ const UpdatePlant = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="price" className="form-label">Price:</label>
+                  <label htmlFor="price" className="form-label">
+                    Price:
+                  </label>
                   <input
                     type="number"
                     className="form-control"
@@ -128,11 +138,15 @@ const UpdatePlant = () => {
                     name="price"
                     value={plant.price}
                     onChange={handleChange}
-                    required min="1"
+                    required
+                    min="0.01"
+                    step="0.01"
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="manufacturer" className="form-label">Manufacturer:</label>
+                  <label htmlFor="manufacturer" className="form-label">
+                    Manufacturer:
+                  </label>
                   <select
                     className="form-control"
                     id="manufacturer"
@@ -151,7 +165,9 @@ const UpdatePlant = () => {
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <div className="text-center">
-                  <button type="submit" className="btn btn-primary">Update Plant</button>
+                  <button type="submit" className="btn btn-primary">
+                    Update Plant
+                  </button>
                 </div>
               </form>
             </div>
