@@ -29,6 +29,32 @@ router.put("/change-password", verifyToken, async (req, res) => {
   }
 });
 
+// Route to update user information
+router.put("/update-profile", verifyToken, async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser && existingUser._id.toString() !== req.userId) {
+      return res.status(400).send({ message: "Email is already in use" });
+    }
+
+    user.name = name;
+    user.email = email;
+    await user.save();
+
+    res.status(200).send({ message: "Profile updated successfully", user });
+  } catch (error) {
+    res.status(500).send({ message: "Error updating profile", error });
+  }
+});
+
 // Route to change any user's password by admin
 router.put(
   "/admin/change-password/:id",

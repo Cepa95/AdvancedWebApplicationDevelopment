@@ -8,6 +8,7 @@ import Users from "./components/admin/Users";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import ChangePassword from "./components/auth/ChangePassword";
+import UpdateProfile from "./components/auth/UpdateProfile"
 import Home from "./components/Home";
 import Products from "./components/products/Products";
 import ProductDetails from "./components/products/ProductDetails";
@@ -25,9 +26,11 @@ import CreateManufacturer from "./components/admin/CreateManufacturer";
 import Cart from "./components/cart/Cart"; 
 import Wishlist from "./components/wishlist/Wishlist";
 
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setUserName] = useState("")
   const [loading, setLoading] = useState(true);
   
 
@@ -47,6 +50,7 @@ function App() {
       const decodedToken = jwtDecode(token);
       setIsLoggedIn(true);
       setIsAdmin(decodedToken.isAdmin);
+      setUserName(decodedToken.name)
     }
   };
 
@@ -54,6 +58,7 @@ function App() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setIsAdmin(false);
+    setUserName("")
   };
 
   if (loading) {
@@ -72,7 +77,8 @@ function App() {
             <Route path="/users" element={isAdmin ? <Users /> : <Navigate to="/login" />} />
             <Route path="/users/:id" element={isAdmin ? <UserInfo /> : <Navigate to="/login" />} />
             <Route path="/change-password" element={isLoggedIn ? <ChangePassword onLogout={handleLogout} /> : <Navigate to="/login" />} />
-            <Route path="/products" element={<Products isAdmin={isAdmin} isLoggedIn={isLoggedIn} />} />
+            <Route path="/update-profile" element={isLoggedIn ? <UpdateProfile onLogout={handleLogout} /> : <Navigate to="/login" />} />
+            <Route path="/products" element={<Products isAdmin={isAdmin} isLoggedIn={isLoggedIn} userName={userName} />} />
             <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/update-plant/:id" element={isAdmin ? <UpdatePlant /> : <Navigate to="/login" />} />
             <Route path="/create-plant" element={isAdmin ? <CreatePlant /> : <Navigate to="/login" />} />

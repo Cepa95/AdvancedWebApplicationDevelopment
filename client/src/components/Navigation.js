@@ -67,7 +67,7 @@ const Navigation = ({ isLoggedIn, isAdmin, onLogout }) => {
             }
             {isLoggedIn && (
               <li className="nav-item">
-                <Link className="nav-link" to="/change-password">
+                <Link className="nav-link" to="/update-profile">
                   <i className="bi bi-gear"></i>
                 </Link>
               </li>

@@ -3,8 +3,23 @@ const User = require("../models/user");
 const { verifyToken, isAdmin } = require("../middleware/auth");
 const router = express.Router();
 
+// Route to get user profile
+router.get("/profile", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("name email");
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user profile", error });
+  }
+});
+
 // Route to get all users with pagination
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, isAdmin, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10; // Default limit is 10
   const skip = (page - 1) * limit;

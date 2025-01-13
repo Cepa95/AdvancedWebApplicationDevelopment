@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../api";
 import ProductCard from "./ProductCard";
 
-const Products = ({ isAdmin, isLoggedIn }) => {
+const Products = ({ isAdmin, isLoggedIn, userName }) => {
   const [plants, setPlants] = useState([]);
   const [error, setError] = useState("");
   const [plantToDelete, setPlantToDelete] = useState(null);
@@ -90,6 +90,7 @@ const Products = ({ isAdmin, isLoggedIn }) => {
   return (
     <div className="container mt-5">
       <br></br>
+      {isLoggedIn && <h3>Welcome, {userName}!</h3>}
       {error && (
         <div className="alert alert-danger fixed-error-message">{error}</div>
       )}
