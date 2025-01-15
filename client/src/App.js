@@ -40,6 +40,7 @@ function App() {
       const decodedToken = jwtDecode(token);
       setIsLoggedIn(true);
       setIsAdmin(decodedToken.isAdmin);
+      setUserName(decodedToken.name)
     }
     setLoading(false);
   }, []);
