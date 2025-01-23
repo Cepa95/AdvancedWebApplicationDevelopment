@@ -18,6 +18,38 @@ router.get("/profile", verifyToken, async (req, res) => {
   }
 });
 
+// New route to get the count of admin and non-admin users
+router.get("/stats", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const adminCount = await User.countDocuments({ isAdmin: true });
+    const nonAdminCount = await User.countDocuments({ isAdmin: false });
+
+    res.status(200).send({ adminCount, nonAdminCount });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching admin stats", error });
+  }
+});
+
+// Route to get all admin users
+router.get("/admins", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const admins = await User.find({ isAdmin: true }).select("name email");
+    res.status(200).send(admins);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching admin users", error });
+  }
+});
+
+// Route to get all non-admin users
+router.get("/non-admins", verifyToken, isAdmin, async (req, res) => {
+  try {
+    const nonAdmins = await User.find({ isAdmin: false }).select("name email");
+    res.status(200).send(nonAdmins);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching non-admin users", error });
+  }
+});
+
 // Route to get all users with pagination
 router.get("/", verifyToken, isAdmin, async (req, res) => {
   const page = parseInt(req.query.page) || 1;

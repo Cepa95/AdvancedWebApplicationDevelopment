@@ -25,6 +25,9 @@ import UpdateManufacturer from "./components/admin/UpdateManufacturer";
 import CreateManufacturer from "./components/admin/CreateManufacturer"; 
 import Cart from "./components/cart/Cart"; 
 import Wishlist from "./components/wishlist/Wishlist";
+import AdminStats from "./components/admin/AdminStats";
+import AdminUsers from "./components/admin/AdminUsers";
+import NonAdminUsers from "./components/admin/NonAdminUsers";
 
 
 function App() {
@@ -92,7 +95,11 @@ function App() {
             <Route path="/create-manufacturer" element={isAdmin ? <CreateManufacturer /> : <Navigate to="/login" />} />
             <Route path="/cart" element={isLoggedIn ? <Cart /> : <Navigate to="/login" />} />
             <Route path="/wishlist" element={isLoggedIn ? <Wishlist /> : <Navigate to="/login" />} />
+            <Route path="/admin-stats" element={isAdmin ? <AdminStats /> : <Navigate to="/login" />} />
+            <Route path="/admin-users" element={isAdmin ? <AdminUsers /> : <Navigate to="/login" />} />
+            <Route path="/non-admin-users" element={isAdmin ? <NonAdminUsers /> : <Navigate to="/login" />} />
             <Route path="*" element={<NotFound />} />
+
           </Routes>
         </Router>
       </header>
