@@ -1,71 +1,15 @@
 const express = require("express");
-const User = require("../models/user");
 const { verifyToken } = require("../middleware/auth");
+const wishlistController = require("../controllers/wishlistController");
 const router = express.Router();
 
 // Route to get the wishlist
-router.get("/", verifyToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).populate({
-      path: "wishlist.plantId",
-      populate: {
-        path: "manufacturer",
-        model: "Manufacturer",
-      },
-    });
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    res.status(200).send(user.wishlist);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/", verifyToken, wishlistController.getWishlist);
 
 // Route to add a product to the wishlist
-router.post("/", verifyToken, async (req, res) => {
-  try {
-    const { plantId } = req.body;
-    const userId = req.userId;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    if (user.wishlist.some((item) => item.plantId.toString() === plantId)) {
-      return res.status(400).send({ message: "Product already in wishlist" });
-    }
-
-    user.wishlist.push({ plantId });
-    await user.save();
-    res.status(200).send(user.wishlist);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.post("/", verifyToken, wishlistController.addProduct);
 
 // Route to remove a product from the wishlist
-router.delete("/:plantId", verifyToken, async (req, res) => {
-  try {
-    const { plantId } = req.params;
-    const userId = req.userId;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    user.wishlist = user.wishlist.filter(
-      (item) => item.plantId.toString() !== plantId
-    );
-    await user.save();
-    res.status(200).send(user.wishlist);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.delete("/:plantId", verifyToken, wishlistController.deleteProduct);
 
 module.exports = router;
