@@ -1,19 +1,10 @@
 const express = require("express");
-const Plant = require("../models/plant");
-const User = require("../models/user");
-const Manufacturer = require("../models/manufacturer");
 const { verifyToken, isAdmin } = require("../middleware/auth");
+const plantController = require("../controllers/plantController");
 const router = express.Router();
 
 // Route to get all plants
-router.get("/", async (req, res) => {
-  try {
-    const plants = await Plant.find();
-    res.status(200).send(plants);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/", plantController.getPlants);
 
 // http://localhost:4000/api/plants
 // {
@@ -25,88 +16,22 @@ router.get("/", async (req, res) => {
 //   "manufacturer": "674cbe31c2747438e89f4668"
 // }
 // Route to create a new plant
-router.post("/", verifyToken, isAdmin, async (req, res) => {
-  try {
-    const plant = new Plant(req.body);
-    await plant.save();
-    res.status(201).send(plant);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+router.post("/", verifyToken, isAdmin, plantController.createPlant);
 
 // http://localhost:4000/api/plants/by-manufacturer?name=Green Thumb Co.
 // Route to find plants by manufacturer's name
-router.get("/by-manufacturer", verifyToken, async (req, res) => {
-  try {
-    const manufacturerName = req.query.name;
-    const manufacturer = await Manufacturer.findOne({ name: manufacturerName });
-
-    if (!manufacturer) {
-      return res.status(404).send({ message: "Manufacturer not found" });
-    }
-
-    const plants = await Plant.find({ manufacturer: manufacturer._id });
-    res.status(200).send(plants);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/by-manufacturer", verifyToken, plantController.getByManufacturer);
 
 // Route to get all plants sorted alphabetically by manufacturer
-router.get("/sorted-by-manufacturer", async (req, res) => {
-  try {
-    const plants = await Plant.find().populate("manufacturer");
-    plants.sort((a, b) =>
-      a.manufacturer.name.localeCompare(b.manufacturer.name)
-    );
-    res.status(200).send(plants);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/sorted-by-manufacturer", plantController.getSortedByManufacturer);
 
 // Route to get a plant by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const plant = await Plant.findById(req.params.id).populate("manufacturer");
-    if (!plant) {
-      return res.status(404).send({ message: "Plant not found" });
-    }
-    res.status(200).send(plant);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/:id", plantController.getPlantById);
 
 // Route to update a plant by ID
-router.put("/:id", verifyToken, isAdmin, async (req, res) => {
-  try {
-    const plant = await Plant.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!plant) {
-      return res.status(404).send({ message: "Plant not found" });
-    }
-    res.status(200).send(plant);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+router.put("/:id", verifyToken, isAdmin, plantController.updatePlant);
 
 // Route to delete a plant by ID
-router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
-  try {
-    const plant = await Plant.findByIdAndDelete(req.params.id);
-    if (!plant) {
-      return res.status(404).send({ message: "Plant not found" });
-    }
-    res.status(200).send({ message: "Plant deleted successfully" });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
+router.delete("/:id", verifyToken, isAdmin, plantController.deletePlant);
 
 module.exports = router;

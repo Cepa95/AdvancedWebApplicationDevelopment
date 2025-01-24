@@ -1,7 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const { generateToken } = require("../middleware/auth");
+const authController = require("../controllers/authController");
 const router = express.Router();
 
 // http://localhost:4000/api/auth/register
@@ -12,27 +11,7 @@ const router = express.Router();
 //     "isAdmin": false
 // }
 // Route to register a new user
-router.post("/register", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).send({ message: "An error has occured!" });
-    }
-    const user = new User({
-        name,
-        email,
-        password,
-        isAdmin: false // u slucaju da pokusaju priko postmana ili slicno
-    });
-    await user.save();
-    const token = generateToken(user);
-    res.status(201).send({ user, token });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+router.post("/register", authController.register);
 
 
 http://localhost:4000/api/auth/login
@@ -41,24 +20,6 @@ http://localhost:4000/api/auth/login
 //     "password": "password123"
 // }
 // Route to login a user
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).send({ message: "Invalid password" });
-    }
-
-    const token = generateToken(user);
-    res.send({ user, token });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.post("/login", authController.login);
 
 module.exports = router;

@@ -1,90 +1,22 @@
 const express = require("express");
-const User = require("../models/user");
 const { verifyToken } = require("../middleware/auth");
+const cartController = require("../controllers/cartController");
 const router = express.Router();
 
 // Route to add a product to the cart
-router.post("/add-to-cart", verifyToken, async (req, res) => {
-  try {
-    const { plantId } = req.body;
-    const userId = req.userId; // Get userId from the token
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    const cartItem = user.cart.find(
-      (item) => item.plantId.toString() === plantId
-    );
-
-    if (cartItem) {
-      cartItem.quantity += 1;
-    } else {
-      user.cart.push({ plantId, quantity: 1 });
-    }
-
-    await user.save();
-    res.status(200).send(user.cart);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.post("/add-to-cart", verifyToken, cartController.addToCart);
 
 // Route to get cart items
-router.get("/", verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const user = await User.findById(userId).populate("cart.plantId");
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    res.status(200).send(user.cart);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.get("/", verifyToken, cartController.getCart);
 
 // Route to remove a product from the cart
-router.delete("/remove-from-cart/:plantId", verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { plantId } = req.params;
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    user.cart = user.cart.filter((item) => item.plantId.toString() !== plantId);
-
-    await user.save();
-    res.status(200).send(user.cart);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.delete(
+  "/remove-from-cart/:plantId",
+  verifyToken,
+  cartController.removeCart
+);
 
 // Route to remove all items from the cart
-router.delete("/clear-cart", verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    user.cart = [];
-    await user.save();
-    res.status(200).send(user.cart);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.delete("/clear-cart", verifyToken, cartController.clearCart);
 
 module.exports = router;
